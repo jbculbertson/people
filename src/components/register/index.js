@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Form, Segment, Grid, Header, Message } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
-
 import server from '../../lib/server';
 
-class Login extends Component {
+class Register extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -15,12 +14,12 @@ class Login extends Component {
       username: '',
       password: '',
       redirectToReferrer: false,
-      redirectToRegister: false,
+      redirectToLogin: false,
     };
   }
 
-  toRegister() {
-    this.setState({ redirectToRegister: true });
+  toLogin() {
+    this.setState({ redirectToLogin: true });
   }
 
   handleSubmit(event) {
@@ -30,7 +29,7 @@ class Login extends Component {
       password: this.state.password,
     };
     const that = this;
-    server.authenticate(user)
+    server.register(user)
       .then(data => {
         if (data && data._id) {
           localStorage.setItem('_id', data);
@@ -49,7 +48,7 @@ class Login extends Component {
   }
 
   render() {
-    const { redirectToReferrer, redirectToRegister } = this.state;
+    const { redirectToReferrer, redirectToLogin } = this.state;
 
     if (redirectToReferrer) {
       return (
@@ -57,9 +56,9 @@ class Login extends Component {
       );
     }
 
-    if (redirectToRegister) {
+    if (redirectToLogin) {
       return (
-        <Redirect to="/" />
+        <Redirect to="/login" />
       );
     }
 
@@ -80,7 +79,7 @@ class Login extends Component {
         >
           <Grid.Column style={{ maxWidth: 450 }}>
             <Header as="h2" color="teal" textAlign="center">
-              Login to your account
+              Register for an account
             </Header>
             <Form size="large" onSubmit={this.handleSubmit}>
               <Segment stacked>
@@ -103,7 +102,7 @@ class Login extends Component {
                 <Form.Button type="submit" color="teal" fluid size="large">Submit</Form.Button>
               </Segment>
               <Message>
-                Need to register for an account?? <a onClick={() => this.toRegister()}>Register</a>
+                Already have an account? <a onClick={() => this.toLogin()}>Sign In</a>
               </Message>
             </Form>
           </Grid.Column>
@@ -113,4 +112,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default Register;
