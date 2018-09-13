@@ -5,10 +5,12 @@ const axiosInstance = axios.create();
 
 export const BATCH_PERSON_CREATE = 'batch_person_create';
 
-export function createPersonBatch(newPerson) {
+export function createPersonBatch(newPerson, fileType) {
+  console.log(newPerson);
+  console.log(fileType);
   return dispatch => {
     const result = axiosInstance.post(
-      `${baseUrl}/person/batch`,
+      `${baseUrl}/person/batch/${fileType}`,
       newPerson,
     );
 

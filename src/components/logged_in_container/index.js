@@ -19,29 +19,33 @@ class LoggedInContainer extends Component {
     const that = this;
     const file = event.target.files[0];
     const fileName = file.name;
-    let type = ""
+    let delimiter = ""
+    let fileType = ""
 
     if (fileName === 'comma.txt') {
-      type = ',';
+      delimiter = ',';
+      fileType = 'comma';
     } else if (fileName === 'space.txt') {
-      type = ' ';
+      delimiter = ' ';
+      fileType = 'space';
     } else if (fileName === 'pipe.txt') {
-      type = '|';
+      delimiter = '|';
+      fileType = 'pipe';
     }
 
     Papa.parse(event.target.files[0], {
       header: false,
-      delimiter: type,
+      delimiter,
       complete(results) {
-        that.handleCSVSave(results.data, type);
+        that.handleCSVSave(results.data, fileType);
       },
     });
   }
 
-  handleCSVSave(data, type) {
+  handleCSVSave(data, fileType) {
     const assetInsertArray = [];
     const parsedCsv = data;
-    if (type === ',') {
+    if (fileType === 'comma') {
       each(parsedCsv, row => {
         const [lastName, firstName, pet, favoriteColor, dateOfBirth] = row;
         const newAsset = [
@@ -53,7 +57,7 @@ class LoggedInContainer extends Component {
         ];
         assetInsertArray.push(newAsset);
       });
-    } else if (type === ' ') {
+    } else if (fileType === 'space') {
       each(parsedCsv, row => {
         const [lastName, firstName, middleInitial, pet, dateOfBirth, favoriteColor] = row;
         const newAsset = [
@@ -66,7 +70,7 @@ class LoggedInContainer extends Component {
         ];
         assetInsertArray.push(newAsset);
       });
-    } else if (type === '|') {
+    } else if (fileType === 'pipe') {
       each(parsedCsv, row => {
         const [lastName, firstName, middleInitial, pet, favoriteColor, dateOfBirth] = row;
         const newAsset = [
@@ -80,7 +84,7 @@ class LoggedInContainer extends Component {
         assetInsertArray.push(newAsset);
       });
     }
-    this.props.createPersonBatch(assetInsertArray)
+    this.props.createPersonBatch(assetInsertArray, fileType)
   }
 
   render() {
