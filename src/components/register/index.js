@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Form, Segment, Grid, Header, Message } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
-import server from '../../lib/server';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { register } from '../../actions/index.js';
 
 class Register extends Component {
   constructor(props) {
@@ -13,7 +15,6 @@ class Register extends Component {
     this.state = {
       username: '',
       password: '',
-      redirectToReferrer: false,
       redirectToLogin: false,
     };
   }
@@ -28,14 +29,7 @@ class Register extends Component {
       username: this.state.username,
       password: this.state.password,
     };
-    const that = this;
-    server.register(user)
-      .then(data => {
-        if (data && data._id) {
-          localStorage.setItem('_id', data);
-          that.setState({ redirectToReferrer: true });
-        }
-      });
+    this.props.register(user);
   }
 
   handleUsernameChange(event) {
@@ -48,9 +42,10 @@ class Register extends Component {
   }
 
   render() {
-    const { redirectToReferrer, redirectToLogin } = this.state;
-
-    if (redirectToReferrer) {
+    const { redirectToLogin } = this.state;
+    const { currentUser } = this.props;
+    console.log(this.props)
+    if (currentUser && currentUser._id) {
       return (
         <Redirect to="/people" />
       );
@@ -111,5 +106,12 @@ class Register extends Component {
     );
   }
 }
+const mapDispatchToProps = dispatch => bindActionCreators({
+  register,
+}, dispatch);
 
-export default Register;
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

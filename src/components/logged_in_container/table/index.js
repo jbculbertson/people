@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
+import moment from 'moment';
+import { get } from 'lodash';
+import { Image, List } from 'semantic-ui-react';
+
+import DogImage from '../../../assets/dog.png';
+import CatImage from '../../../assets/cat.png';
+import BothImage from '../../../assets/both.png';
 
 class Table extends Component {
   constructor(props) {
@@ -12,14 +19,14 @@ class Table extends Component {
 
   render() {
     console.log(this.props);
-    const { data } = this.props;
+    const data = get(this.props, 'data', []);
     const columns = [
       {
-        Header: 'First Name',
+        Header: 'First name',
         accessor: 'firstName',
       },
       {
-        Header: 'Last Name',
+        Header: 'Last name',
         accessor: 'lastName',
       },
       {
@@ -29,13 +36,57 @@ class Table extends Component {
       {
         Header: 'Pet',
         accessor: 'pet',
+        Cell: val => {
+          if (val && val.value) {
+            const { value } = val
+            if (value === 'Dog' || value === 'D') {
+              return (
+                <List>
+                  <List.Item>
+                  <Image avatar src={DogImage} />
+                    <List.Content>
+                      Dog
+                    </List.Content>
+                  </List.Item>
+                </List>
+              );
+            } else if (value === 'Cat' || value === 'C') {
+              return (
+                <List>
+                  <List.Item>
+                  <Image avatar src={CatImage} />
+                    <List.Content>
+                      Cat
+                    </List.Content>
+                  </List.Item>
+                </List>
+              );
+            } else if (value === 'Both' || value === 'B'){
+              return (
+                <List>
+                  <List.Item>
+                  <Image avatar src={BothImage} />
+                    <List.Content>
+                      Both
+                    </List.Content>
+                  </List.Item>
+                </List>
+              );
+            } else {
+              return 'None';
+            }
+          }
+        },
       },
       {
-        Header: 'Date of Birth',
+        Header: 'Birthday',
         accessor: 'dateOfBirth',
+        Cell: val => {
+          return moment(val.value).format('M/D/YYYY');
+        },
       },
       {
-        Header: 'Favorite Color',
+        Header: 'Favorite color',
         accessor: 'favoriteColor',
       },
     ];
@@ -45,6 +96,7 @@ class Table extends Component {
         columns={columns}
         className="-highlight"
         showPagination={false}
+        pageSize={data.length}
         sortable={true}
         defaultSorted={[
         {

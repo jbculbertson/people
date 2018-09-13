@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Form, Segment, Grid, Header, Message } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
-
-import server from '../../lib/server';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { authenticate } from '../../actions/index.js';
 
 class Login extends Component {
   constructor(props) {
@@ -14,7 +15,6 @@ class Login extends Component {
     this.state = {
       username: '',
       password: '',
-      redirectToReferrer: false,
       redirectToRegister: false,
     };
   }
@@ -29,14 +29,7 @@ class Login extends Component {
       username: this.state.username,
       password: this.state.password,
     };
-    const that = this;
-    server.authenticate(user)
-      .then(data => {
-        if (data && data._id) {
-          localStorage.setItem('_id', data);
-          that.setState({ redirectToReferrer: true });
-        }
-      });
+    this.props.authenticate(user);
   }
 
   handleUsernameChange(event) {
@@ -49,9 +42,10 @@ class Login extends Component {
   }
 
   render() {
-    const { redirectToReferrer, redirectToRegister } = this.state;
+    const { redirectToRegister } = this.state;
+    const { currentUser } = this.props;
 
-    if (redirectToReferrer) {
+    if (currentUser && currentUser._id) {
       return (
         <Redirect to="/people" />
       );
@@ -112,5 +106,12 @@ class Login extends Component {
     );
   }
 }
+const mapDispatchToProps = dispatch => bindActionCreators({
+  authenticate,
+}, dispatch);
 
-export default Login;
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
