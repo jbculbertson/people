@@ -4,7 +4,6 @@ import {
 } from '../actions/index.js';
 
 export default function(state = {}, action) {
-  console.log(action);
   switch (action.type) {
     case BATCH_PERSON_CREATE:
       return {

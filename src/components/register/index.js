@@ -44,7 +44,6 @@ class Register extends Component {
   render() {
     const { redirectToLogin } = this.state;
     const { currentUser } = this.props;
-    console.log(this.props)
     if (currentUser && currentUser._id) {
       return (
         <Redirect to="/people" />

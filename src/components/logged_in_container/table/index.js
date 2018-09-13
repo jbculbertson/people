@@ -18,7 +18,6 @@ class Table extends Component {
 
 
   render() {
-    console.log(this.props);
     const data = get(this.props, 'data', []);
     const columns = [
       {

@@ -7,6 +7,11 @@ export const BATCH_PERSON_CREATE = 'batch_person_create';
 export const FETCH_PEOPLE = 'fetch_people';
 export const AUTHENTICATE = 'authenticate';
 export const REGISTER = 'register';
+export const LOGOUT = 'logout';
+
+export function logout() {
+  return { type: LOGOUT };
+}
 
 export function register(user) {
   return dispatch => {

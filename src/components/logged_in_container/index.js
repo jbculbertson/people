@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Input, Icon } from 'semantic-ui-react';
+import { Input, Icon, Button } from 'semantic-ui-react';
 import Papa from 'papaparse';
-
+import { Redirect } from 'react-router-dom';
 import { each, get } from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { createPersonBatch, fetchPeople } from '../../actions/index.js';
+import { createPersonBatch, fetchPeople, logout } from '../../actions/index.js';
 import Table from './table';
 
 class LoggedInContainer extends Component {
@@ -15,11 +15,16 @@ class LoggedInContainer extends Component {
     };
 
     this.handleCSVUpload = this.handleCSVUpload.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   componentDidMount() {
     const userId = get(this.props, 'currentUser._id');
     this.props.fetchPeople(userId);
+  }
+
+  handleLogout() {
+    this.props.logout()
   }
 
   handleCSVUpload(event) {
@@ -96,23 +101,36 @@ class LoggedInContainer extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <h4>Bulk Upload Sponsors</h4>
-        <Input type="file" id="uploadCSV" accept="text/csv, .txt" onChange={this.handleCSVUpload} style={{ display: 'none' }}/>
-        <label htmlFor="uploadCSV" className="ui red right basic button">
-          <Icon name="upload"/>
-          Upload
-        </label>{}
-        <Table data={this.props.people} />
-      </div>
-    );
+    const userId = get(this.props, 'currentUser._id');
+    if (userId) {
+      return (
+        <div>
+          <h4>Bulk Upload Sponsors</h4>
+          <Input type="file" id="uploadCSV" accept="text/csv, .txt" onChange={this.handleCSVUpload} style={{ display: 'none' }}/>
+          <label htmlFor="uploadCSV" className="ui red right basic button">
+            <Icon name="upload"/>
+            Upload
+          </label>
+          <Button
+            onClick={this.handleLogout}
+            color='red'
+            style={{ 'float': 'right' }}
+          >
+            Logout
+          </Button>
+          <Table data={this.props.people} />
+        </div>
+      );
+    } else {
+      return <Redirect to="/" />;
+    }
   }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createPersonBatch,
   fetchPeople,
+  logout,
 }, dispatch);
 
 const mapStateToProps = ({ people, user }) => ({
