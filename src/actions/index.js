@@ -33,23 +33,23 @@ export function authenticate(user) {
   };
 }
 
-export function createPersonBatch(newPerson, fileType) {
+export function createPersonBatch(newPerson, fileType, userId) {
   return dispatch => {
     const result = axiosInstance.post(
       `${baseUrl}/person/batch/${fileType}`,
-      newPerson,
+      { newPerson, userId },
     );
 
     result.then(data => {
       dispatch({ type: BATCH_PERSON_CREATE, payload: data });
-      dispatch(fetchPeople());
+      dispatch(fetchPeople(userId));
     });
   };
 }
 
-export function fetchPeople() {
+export function fetchPeople(userId) {
   return dispatch => {
-    const result = axiosInstance.get(`${baseUrl}/person`);
+    const result = axiosInstance.get(`${baseUrl}/person/${userId}`);
 
     result.then(data => {
       dispatch({ type: FETCH_PEOPLE, payload: data });

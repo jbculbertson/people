@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Input, Icon } from 'semantic-ui-react';
 import Papa from 'papaparse';
 
-import { each } from 'lodash';
+import { each, get } from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createPersonBatch, fetchPeople } from '../../actions/index.js';
@@ -18,7 +18,8 @@ class LoggedInContainer extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchPeople();
+    const userId = get(this.props, 'currentUser._id');
+    this.props.fetchPeople(userId);
   }
 
   handleCSVUpload(event) {
@@ -49,6 +50,7 @@ class LoggedInContainer extends Component {
   }
 
   handleCSVSave(data, fileType) {
+    const userId = get(this.props, 'currentUser._id');
     const assetInsertArray = [];
     const parsedCsv = data;
     if (fileType === 'comma') {
@@ -90,11 +92,10 @@ class LoggedInContainer extends Component {
         assetInsertArray.push(newAsset);
       });
     }
-    this.props.createPersonBatch(assetInsertArray, fileType)
+    this.props.createPersonBatch(assetInsertArray, fileType, userId)
   }
 
   render() {
-    console.log(this.props)
     return (
       <div>
         <h4>Bulk Upload Sponsors</h4>
@@ -114,8 +115,9 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchPeople,
 }, dispatch);
 
-const mapStateToProps = ({ people }) => ({
+const mapStateToProps = ({ people, user }) => ({
   people: people.people,
+  currentUser: user.currentUser,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoggedInContainer);
