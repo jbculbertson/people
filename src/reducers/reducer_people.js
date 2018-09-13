@@ -1,11 +1,14 @@
+import {
+  BATCH_PERSON_CREATE,
+} from '../actions/index.js';
+
 export default function(state = {}, action) {
   switch (action.type) {
-    case 'test1':
+    case BATCH_PERSON_CREATE:
       return {
         ...state,
-        people: action.payload.data,
       };
     default:
       return state;
   }
-}
+};
