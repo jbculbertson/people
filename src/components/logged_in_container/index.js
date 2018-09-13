@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Input, Icon } from 'semantic-ui-react';
 import Papa from 'papaparse';
+
 import { each } from 'lodash';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { createPersonBatch } from '../../actions/index.js';
+import { createPersonBatch, fetchPeople } from '../../actions/index.js';
+import Table from './table';
 
 class LoggedInContainer extends Component {
   constructor(props) {
@@ -13,6 +15,10 @@ class LoggedInContainer extends Component {
     };
 
     this.handleCSVUpload = this.handleCSVUpload.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.fetchPeople();
   }
 
   handleCSVUpload(event) {
@@ -88,6 +94,7 @@ class LoggedInContainer extends Component {
   }
 
   render() {
+    console.log(this.props)
     return (
       <div>
         <h4>Bulk Upload Sponsors</h4>
@@ -95,7 +102,8 @@ class LoggedInContainer extends Component {
         <label htmlFor="uploadCSV" className="ui red right basic button">
           <Icon name="upload"/>
           Upload
-        </label>
+        </label>{}
+        <Table data={this.props.people} />
       </div>
     );
   }
@@ -103,10 +111,11 @@ class LoggedInContainer extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createPersonBatch,
+  fetchPeople,
 }, dispatch);
 
 const mapStateToProps = ({ people }) => ({
-  people,
+  people: people.people,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoggedInContainer);
