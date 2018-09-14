@@ -36,16 +36,16 @@ npm install
 
 This app makes use of packages like.
 
-*   Lodash for helper functions
-*   Axios for API calls
-*   Moment for parsing javascript dates
-*   Redux for app state management
-*   Semantic-UI as a front-end template
-*   Papaparse for parsing files
+*   `Lodash` for helper functions
+*   `Axios` for API calls
+*   `Moment` for parsing javascript dates
+*   `Redux` for app state management
+*   `Semantic-UI` as a front-end template
+*   `Papaparse` for parsing files
 
 ## Run
 
-You'll need to have [PEOPLE API](https://github.com/jbculbertson/people-api)running.
+You'll need to have [People API](https://github.com/jbculbertson/people-api) running.
 
 Using .sample.env as a template, setup your environment variables.
 
