@@ -83,7 +83,7 @@ class Register extends Component {
                   onChange={this.handleUsernameChange}
                   icon="user"
                   iconPosition="left"
-                  placeholder="E-mail address"
+                  placeholder="Username"
                 />
                 <Form.Input
                   type="password"

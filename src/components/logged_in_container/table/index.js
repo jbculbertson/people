@@ -97,6 +97,7 @@ class Table extends Component {
         showPagination={false}
         pageSize={data.length}
         sortable={true}
+        headerStyle={{ color: 'grey' }}
         defaultSorted={[
         {
           id: 'firstName',

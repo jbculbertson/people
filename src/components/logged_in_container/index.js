@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Icon, Button } from 'semantic-ui-react';
+import { Input, Button, Container, Grid } from 'semantic-ui-react';
 import Papa from 'papaparse';
 import { Redirect } from 'react-router-dom';
 import { each, get } from 'lodash';
@@ -48,7 +48,9 @@ class LoggedInContainer extends Component {
     Papa.parse(event.target.files[0], {
       header: false,
       delimiter,
+      skipEmptyLines: true,
       complete(results) {
+        console.log(results);
         that.handleCSVSave(results.data, fileType);
       },
     });
@@ -102,24 +104,45 @@ class LoggedInContainer extends Component {
 
   render() {
     const userId = get(this.props, 'currentUser._id');
+    const people = get(this.props, 'people');
+    let personCount = 0;
+    if (people && people.length > 0) {
+      personCount = people.length;
+    }
+
     if (userId) {
       return (
-        <div>
-          <h4>Bulk Upload Sponsors</h4>
-          <Input type="file" id="uploadCSV" accept="text/csv, .txt" onChange={this.handleCSVUpload} style={{ display: 'none' }}/>
-          <label htmlFor="uploadCSV" className="ui red right basic button">
-            <Icon name="upload"/>
-            Upload
-          </label>
-          <Button
-            onClick={this.handleLogout}
-            color='red'
-            style={{ 'float': 'right' }}
-          >
-            Logout
-          </Button>
-          <Table data={this.props.people} />
-        </div>
+        <Container
+          style={{ maxWidth: '600px', textAlign: 'center' }}
+        >
+          <Grid>
+            <Grid.Row>
+              <Grid.Column>
+                <Button
+                  onClick={this.handleLogout}
+                  color='red'
+                  style={{ 'float': 'right' }}
+                >
+                  Logout
+                </Button>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>
+                <h4 style={{ float: 'left', fontSize: '25px' }}>{personCount} People</h4>
+                <Input type="file" id="uploadCSV" accept="text/csv, .txt" onChange={this.handleCSVUpload} style={{ display: 'none' }}/>
+                <label htmlFor="uploadCSV" className="ui button" style={{ float: 'right', background: '#54bbff', color: 'white' }}>
+                  Import a file
+                </label>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>
+                <Table data={people} />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Container>
       );
     } else {
       return <Redirect to="/" />;
