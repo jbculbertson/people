@@ -97,7 +97,7 @@ class Login extends Component {
                 <Form.Button type="submit" color="teal" fluid size="large">Submit</Form.Button>
               </Segment>
               <Message>
-                Need to register for an account?? <a onClick={() => this.toRegister()}>Register</a>
+                Need to register for an account? <a onClick={() => this.toRegister()}>Register</a>
               </Message>
             </Form>
           </Grid.Column>
